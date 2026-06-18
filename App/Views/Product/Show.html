@@ -36,12 +36,46 @@
                         <h4>Description:</h4>
                         <p>{{article.description}}</p>
                     </div>
+
                     <div class="u-area mt-small">
 
-                    <a name="submit" href="mailto:{{article.email}}" class="btn btn-primary u-btn">Contacter {{article
-                        .username}}</a>
+                        {% if contact_success is defined %}
+                            <div class="alert alert-success">
+                                {{ contact_success }}
+                            </div>
+                        {% endif %}
+
+                        {% if contact_errors is defined %}
+                            <div class="alert alert-danger">
+                                {% for error in contact_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <form method="post" action="/product/{{ article.id }}/contact">
+                            <div class="form-group">
+                                <label for="name">Votre nom</label>
+                                <input type="text" id="name" name="name" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Votre email</label>
+                                <input type="email" id="email" name="email" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">Votre message</label>
+                                <textarea id="message" name="message" class="form-control" rows="5"></textarea>
+                            </div>
+
+                            <button type="submit" name="submit_contact" class="btn btn-primary u-btn">
+                                Contacter {{ article.username }}
+                            </button>
+                        </form>
 
                     </div>
+
                 </div>
             </div>
 
