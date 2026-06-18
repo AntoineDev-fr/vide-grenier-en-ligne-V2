@@ -2,6 +2,8 @@ vendor
 .idea
 composer.lock
 
+
+data/
 data/dev/
 data/recette/
 data/prod/
