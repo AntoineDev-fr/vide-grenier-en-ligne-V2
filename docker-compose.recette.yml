@@ -1,0 +1,37 @@
+name: videgrenier-recette
+services:
+  web-recette:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-recette
+    ports:
+      - "${RECETTE_APP_PORT:-8081}:80"
+    environment:
+      DB_HOST: mysql-recette
+      DB_NAME: "${RECETTE_DB_NAME:-videgrenier_recette}"
+      DB_USER: "${RECETTE_DB_USER:-recette_user}"
+      DB_PASSWORD: "${RECETTE_DB_PASSWORD:-recette_password}"
+    depends_on:
+      mysql-recette:
+        condition: service_healthy
+
+  mysql-recette:
+    image: mysql:8.0
+    container_name: mysql-recette
+    ports:
+      - "${RECETTE_MYSQL_PORT:-3308}:3306"
+    environment:
+      MYSQL_DATABASE: "${RECETTE_DB_NAME:-videgrenier_recette}"
+      MYSQL_USER: "${RECETTE_DB_USER:-recette_user}"
+      MYSQL_PASSWORD: "${RECETTE_DB_PASSWORD:-recette_password}"
+      MYSQL_ROOT_PASSWORD: "${RECETTE_DB_ROOT_PASSWORD:-root_recette_password}"
+    volumes:
+      - ./data/recette:/var/lib/mysql
+      - ./sql/import.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${RECETTE_DB_ROOT_PASSWORD:-root_recette_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 180s

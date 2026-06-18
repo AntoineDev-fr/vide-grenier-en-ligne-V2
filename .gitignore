@@ -4,3 +4,10 @@ composer.lock
 
 
 data/
+data/dev/
+data/recette/
+data/prod/
+
+.env.dev
+.env.recette
+.env.prod
