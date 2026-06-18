@@ -7,6 +7,20 @@
  */
 
 session_start();
+if (!isset($_SESSION['user']) && isset($_COOKIE['remember_me'])) {
+    $rememberedUser = json_decode(base64_decode($_COOKIE['remember_me']), true);
+
+    if (
+        is_array($rememberedUser)
+        && isset($rememberedUser['id'])
+        && isset($rememberedUser['username'])
+    ) {
+        $_SESSION['user'] = array(
+            'id' => $rememberedUser['id'],
+            'username' => $rememberedUser['username']
+        );
+    }
+}
 
 /**
  * Composer

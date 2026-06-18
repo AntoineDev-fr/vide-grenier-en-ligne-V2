@@ -117,14 +117,20 @@ class User extends \Core\Controller
                 return false;
             }
 
-            // TODO: Create a remember me cookie if the user has selected the option
-            // to remained logged in on the login form.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
-
             $_SESSION['user'] = array(
                 'id' => $user['id'],
                 'username' => $user['username'],
             );
+
+            if (isset($data['remember_me']) && $data['remember_me'] == '1') {
+                $cookieValue = base64_encode(json_encode(array(
+                    'id' => $user['id'],
+                    'username' => $user['username']
+                )));
+
+                setcookie('remember_me', $cookieValue, time() + (30 * 24 * 60 * 60), '/', '', false, true);
+            }
+
 
             return true;
 
@@ -144,20 +150,18 @@ class User extends \Core\Controller
      */
     public function logoutAction() {
 
-        /*
-        if (isset($_COOKIE[$cookie])){
-            // TODO: Delete the users remember me cookie if one has been stored.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L148
-        }*/
-        // Destroy all data registered to the session.
+        if (isset($_COOKIE['remember_me'])) {
+            setcookie('remember_me', '', time() - 3600, '/', '', false, true);
+            unset($_COOKIE['remember_me']);
+        }
 
         $_SESSION = array();
 
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
+            setcookie(session_name(), '', time() - 3600,
+                $params["path"], $params["domain"],  /* On utilise les paramètres du cookie de session */
+                $params["secure"], $params["httponly"] /* On utilise les paramètres du cookie de session */
             );
         }
 
