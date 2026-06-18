@@ -16,6 +16,8 @@ WORKDIR /var/www/html
 
 COPY . .
 
+COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+
 RUN composer install
 
 RUN chown -R www-data:www-data /var/www/html
