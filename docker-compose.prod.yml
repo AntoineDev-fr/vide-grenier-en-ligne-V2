@@ -1,0 +1,37 @@
+name: videgrenier-prod
+services:
+  web-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-prod
+    ports:
+      - "${PROD_APP_PORT:-8082}:80"
+    environment:
+      DB_HOST: mysql-prod
+      DB_NAME: "${PROD_DB_NAME:-videgrenier_prod}"
+      DB_USER: "${PROD_DB_USER:-prod_user}"
+      DB_PASSWORD: "${PROD_DB_PASSWORD:-prod_password}"
+    depends_on:
+      mysql-prod:
+        condition: service_healthy
+
+  mysql-prod:
+    image: mysql:8.0
+    container_name: mysql-prod
+    ports:
+      - "${PROD_MYSQL_PORT:-3309}:3306"
+    environment:
+      MYSQL_DATABASE: "${PROD_DB_NAME:-videgrenier_prod}"
+      MYSQL_USER: "${PROD_DB_USER:-prod_user}"
+      MYSQL_PASSWORD: "${PROD_DB_PASSWORD:-prod_password}"
+      MYSQL_ROOT_PASSWORD: "${PROD_DB_ROOT_PASSWORD:-root_prod_password}"
+    volumes:
+      - ./data/prod:/var/lib/mysql
+      - ./sql/import.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${PROD_DB_ROOT_PASSWORD:-root_prod_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
