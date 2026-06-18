@@ -29,11 +29,13 @@ class Product extends \Core\Controller
                 $f['user_id'] = $_SESSION['user']['id'];
                 $id = Articles::save($f);
 
-                $pictureName = Upload::uploadFile($_FILES['picture'], $id);
-
-                Articles::attachPicture($id, $pictureName);
+                if (isset($_FILES['picture']) && $_FILES['picture']['error'] !== UPLOAD_ERR_NO_FILE) {
+                    $pictureName = Upload::uploadFile($_FILES['picture'], $id);
+                    Articles::attachPicture($id, $pictureName);
+                }
 
                 header('Location: /product/' . $id);
+                exit;
             } catch (\Exception $e){
                     var_dump($e);
             }

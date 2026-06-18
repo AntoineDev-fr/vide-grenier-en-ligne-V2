@@ -51,7 +51,17 @@ class User extends \Core\Controller
 
             // validation
 
-            $this->register($f);
+            $userID = $this->register($f);
+
+            if ($userID) {
+                $_SESSION['user'] = array(
+                    'id' => $userID,
+                    'username' => $f['username'],
+                );
+
+                header('Location: /account');
+                exit;
+            }
             // TODO: Rappeler la fonction de login pour connecter l'utilisateur
         }
 
