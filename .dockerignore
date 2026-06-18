@@ -1,0 +1,8 @@
+data/
+logs/
+.git/
+.gitignore
+.env.dev
+.env.recette
+.env.prod
+node_modules/

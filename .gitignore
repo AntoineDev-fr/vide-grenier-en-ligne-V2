@@ -1,3 +1,11 @@
 vendor
 .idea
 composer.lock
+
+data/dev/
+data/recette/
+data/prod/
+
+.env.dev
+.env.recette
+.env.prod
