@@ -8,6 +8,7 @@ services:
     ports:
       - "${RECETTE_APP_PORT:-8081}:80"
     environment:
+      APP_ENV: "${APP_ENV:-RECETTE}"
       DB_HOST: mysql-recette
       DB_NAME: "${RECETTE_DB_NAME:-videgrenier_recette}"
       DB_USER: "${RECETTE_DB_USER:-recette_user}"
