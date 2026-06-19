@@ -46,7 +46,7 @@ class View
         if ($twig === null) {
             $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/App/Views');
             $twig = new \Twig\Environment($loader, ['debug' => true,]);
-            $twig->addExtension(new \Twig\Extension\DebugExtension());
+            $twig->addExtension(new \Twig\Extension\DebugExtension());            
         }
 
         echo $twig->render($template, View::setDefaultVariables($args));
@@ -62,7 +62,7 @@ class View
     public static function setDefaultVariables($args = []){
 
         $args["user"] = isset($_SESSION['user']) ? $_SESSION['user'] : null;
-
+        $args["environment"] = getenv('APP_ENV');
         return $args;
     }
 }

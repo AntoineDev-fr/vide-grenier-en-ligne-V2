@@ -25,4 +25,9 @@ class Config
     {
         return getenv('DB_PASSWORD');
     }
+    
+    public static function getEnvironment()
+    {
+        return getenv('APP_ENV');
+    }
 }

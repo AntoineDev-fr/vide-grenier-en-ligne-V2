@@ -10,6 +10,7 @@ services:
     volumes:
       - ./:/var/www/html
     environment:
+      APP_ENV: "${APP_ENV:-DEV}" 
       DB_HOST: mysql-dev
       DB_NAME: "${DEV_DB_NAME:-videgrenier_dev}"
       DB_USER: "${DEV_DB_USER:-dev_user}"
